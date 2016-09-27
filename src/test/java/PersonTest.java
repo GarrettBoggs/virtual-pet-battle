@@ -43,11 +43,11 @@ public class PersonTest {
   public void getMonsters_retrievesAllMonstersFromDatabase_monstersList() {
     Person testPerson = new Person("Henry", "henry@henry.com");
     testPerson.save();
-    Monster firstMonster = new Monster("Bubbles", testPerson.getId());
+    FireMonster firstMonster = new FireMonster("Smokey", testPerson.getId());
     firstMonster.save();
-    Monster secondMonster = new Monster("Spud", testPerson.getId());
+    WaterMonster secondMonster = new WaterMonster("Drippy", testPerson.getId());
     secondMonster.save();
-    Monster[] monsters = new Monster[] { firstMonster, secondMonster };
+    Object[] monsters = new Object[] { firstMonster, secondMonster };
     assertTrue(testPerson.getMonsters().containsAll(Arrays.asList(monsters)));
   }
 
