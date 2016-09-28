@@ -141,11 +141,11 @@ public abstract class Monster {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO monsters (name, personId, birthday, type) VALUES (:name, :personId, now(), :type)";
       this.id = (int) con.createQuery(sql, true)
-        .addParameter("name", this.name)
-        .addParameter("personId", this.personId)
-        .addParameter("type", this.type)
-        .executeUpdate()
-        .getKey();
+      .addParameter("name", this.name)
+      .addParameter("personId", this.personId)
+      .addParameter("type", this.type)
+      .executeUpdate()
+      .getKey();
     }
   }
 

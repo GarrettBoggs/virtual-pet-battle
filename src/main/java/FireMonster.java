@@ -9,7 +9,7 @@ public class FireMonster extends Monster {
   public static final String DATABASE_TYPE = "fire";
   public Timestamp lastKindling;
 
-
+  
   public FireMonster(String name, int personId){
     this.name = name;
     this.personId = personId;
@@ -22,49 +22,49 @@ public class FireMonster extends Monster {
 
   }
   public int getFireLevel(){
-      return fireLevel;
+    return fireLevel;
+  }
+  public Timestamp getLastKindling(){
+    return lastKindling;
+  }
+
+  public void kindling(){
+    if (fireLevel >= MAX_PLAY_LEVEL){
+      throw new UnsupportedOperationException("You cannot give any more kindling!");
     }
-    public Timestamp getLastKindling(){
-      return lastKindling;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE monsters SET lastkindling = now() WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .executeUpdate();
     }
+    fireLevel++;
+  }
 
-    public void kindling(){
-      if (fireLevel >= MAX_PLAY_LEVEL){
-        throw new UnsupportedOperationException("You cannot give any more kindling!");
-      }
-      try(Connection con = DB.sql2o.open()) {
-        String sql = "UPDATE monsters SET lastkindling = now() WHERE id = :id";
-        con.createQuery(sql)
-          .addParameter("id", id)
-          .executeUpdate();
-        }
-      fireLevel++;
+
+
+
+  public static List<FireMonster> all() {
+    String sql = "SELECT * FROM monsters WHERE type='fire';";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+      .throwOnMappingFailure(false)
+      .executeAndFetch(FireMonster.class);
     }
+  }
 
-
-
-
-    public static List<FireMonster> all() {
-      String sql = "SELECT * FROM monsters WHERE type='fire';";
-      try(Connection con = DB.sql2o.open()) {
-        return con.createQuery(sql)
-        .throwOnMappingFailure(false)
-        .executeAndFetch(FireMonster.class);
-      }
-    }
-
-    public static FireMonster find(int id) {
-      try(Connection con = DB.sql2o.open()) {
-        String sql = "SELECT * FROM monsters where id=:id";
-        FireMonster monster = con.createQuery(sql)
-          .addParameter("id", id)
-          .throwOnMappingFailure(false)
-          .executeAndFetchFirst(FireMonster.class);
+  public static FireMonster find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM monsters where id=:id";
+      FireMonster monster = con.createQuery(sql)
+      .addParameter("id", id)
+      .throwOnMappingFailure(false)
+      .executeAndFetchFirst(FireMonster.class);
       return monster;
-      }
     }
-  
-@Override
+  }
+
+  @Override
   public void depleteLevels(){
     if (isAlive()){
       playLevel--;
@@ -74,14 +74,14 @@ public class FireMonster extends Monster {
     }
   }
   @Override
-    public boolean isAlive() {
-      if (foodLevel <= MIN_ALL_LEVELS ||
-      playLevel <= MIN_ALL_LEVELS ||
-      fireLevel <= MIN_ALL_LEVELS ||
-      sleepLevel <= MIN_ALL_LEVELS) {
-        return false;
-      }
-      return true;
+  public boolean isAlive() {
+    if (foodLevel <= MIN_ALL_LEVELS ||
+    playLevel <= MIN_ALL_LEVELS ||
+    fireLevel <= MIN_ALL_LEVELS ||
+    sleepLevel <= MIN_ALL_LEVELS) {
+      return false;
     }
+    return true;
+  }
 
 }

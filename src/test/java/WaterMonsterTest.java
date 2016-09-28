@@ -9,7 +9,7 @@ public class WaterMonsterTest {
 
   @Rule
   public DatabaseRule database = new DatabaseRule();
-
+  
   @Test
   public void waterMonster_instantiatesCorrectly_true() {
     WaterMonster testWaterMonster = new WaterMonster("Bubbles", 1);
@@ -251,57 +251,57 @@ public class WaterMonsterTest {
     try {
       Thread.sleep(6000);
     } catch (InterruptedException exception){}
-    int secondPlayLevel = testWaterMonster.getPlayLevel();
-    assertTrue(firstPlayLevel > secondPlayLevel);
-  }
-
-  @Test
-  public void timer_haltsAfterWaterMonsterDies() {
-    WaterMonster testWaterMonster = new WaterMonster("Bubbles", 1);
-    testWaterMonster.startTimer();
-    try {
-      Thread.sleep(6000);
-    } catch (InterruptedException exception){}
-    assertFalse(testWaterMonster.isAlive());
-    assertTrue(testWaterMonster.getFoodLevel() >= 0);
-  }
-  @Test
-    public void waterMonster_instantiatesWithHalfFullWaterLevel(){
-      WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
-      assertEquals(testWaterMonster.getWaterLevel(), (WaterMonster.MAX_WATER_LEVEL / 2));
+      int secondPlayLevel = testWaterMonster.getPlayLevel();
+      assertTrue(firstPlayLevel > secondPlayLevel);
     }
+
     @Test
+    public void timer_haltsAfterWaterMonsterDies() {
+      WaterMonster testWaterMonster = new WaterMonster("Bubbles", 1);
+      testWaterMonster.startTimer();
+      try {
+        Thread.sleep(6000);
+      } catch (InterruptedException exception){}
+        assertFalse(testWaterMonster.isAlive());
+        assertTrue(testWaterMonster.getFoodLevel() >= 0);
+      }
+      @Test
+      public void waterMonster_instantiatesWithHalfFullWaterLevel(){
+        WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
+        assertEquals(testWaterMonster.getWaterLevel(), (WaterMonster.MAX_WATER_LEVEL / 2));
+      }
+      @Test
       public void water_increasesWaterMonsterWaterLevel(){
         WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
         testWaterMonster.water();
         assertTrue(testWaterMonster.getWaterLevel() > (WaterMonster.MAX_WATER_LEVEL / 2));
       }
       @Test(expected = UnsupportedOperationException.class)
-  public void water_throwsExceptionIfWaterLevelIsAtMaxValue(){
-    WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
-    for(int i = WaterMonster.MIN_ALL_LEVELS; i <= (WaterMonster.MAX_WATER_LEVEL); i++){
-      testWaterMonster.water();
+      public void water_throwsExceptionIfWaterLevelIsAtMaxValue(){
+        WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
+        for(int i = WaterMonster.MIN_ALL_LEVELS; i <= (WaterMonster.MAX_WATER_LEVEL); i++){
+          testWaterMonster.water();
+        }
+      }
+      @Test
+      public void depleteLevels_reducesAllLevels(){
+        WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
+        testWaterMonster.depleteLevels();
+        assertEquals(testWaterMonster.getFoodLevel(), (WaterMonster.MAX_FOOD_LEVEL / 2) - 1);
+        assertEquals(testWaterMonster.getSleepLevel(), (WaterMonster.MAX_SLEEP_LEVEL / 2) - 1);
+        assertEquals(testWaterMonster.getPlayLevel(), (WaterMonster.MAX_PLAY_LEVEL / 2) - 1);
+        assertEquals(testWaterMonster.getWaterLevel(), (WaterMonster.MAX_WATER_LEVEL / 2) - 1);
+      }
+
+      @Test
+      public void water_recordsTimeLastWaterInDatabase() {
+        WaterMonster testWaterMonster = new WaterMonster("Bubbles", 1);
+        testWaterMonster.save();
+        testWaterMonster.water();
+        Timestamp savedWaterMonsterLastWater = WaterMonster.find(testWaterMonster.getId()).getLastWater();
+        Timestamp rightNow = new Timestamp(new Date().getTime());
+        assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedWaterMonsterLastWater));
+      }
+
+
     }
-  }
-  @Test
-    public void depleteLevels_reducesAllLevels(){
-      WaterMonster testWaterMonster = new WaterMonster("Drippy", 1);
-      testWaterMonster.depleteLevels();
-      assertEquals(testWaterMonster.getFoodLevel(), (WaterMonster.MAX_FOOD_LEVEL / 2) - 1);
-      assertEquals(testWaterMonster.getSleepLevel(), (WaterMonster.MAX_SLEEP_LEVEL / 2) - 1);
-      assertEquals(testWaterMonster.getPlayLevel(), (WaterMonster.MAX_PLAY_LEVEL / 2) - 1);
-      assertEquals(testWaterMonster.getWaterLevel(), (WaterMonster.MAX_WATER_LEVEL / 2) - 1);
-    }
-
-    @Test
-  public void water_recordsTimeLastWaterInDatabase() {
-    WaterMonster testWaterMonster = new WaterMonster("Bubbles", 1);
-    testWaterMonster.save();
-    testWaterMonster.water();
-    Timestamp savedWaterMonsterLastWater = WaterMonster.find(testWaterMonster.getId()).getLastWater();
-    Timestamp rightNow = new Timestamp(new Date().getTime());
-    assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedWaterMonsterLastWater));
-  }
-
-
-}

@@ -30,9 +30,9 @@ public class WaterMonster extends Monster {
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE monsters SET lastwater = now() WHERE id = :id";
       con.createQuery(sql)
-        .addParameter("id", id)
-        .executeUpdate();
-      }
+      .addParameter("id", id)
+      .executeUpdate();
+    }
     waterLevel++;
   }
 
@@ -74,10 +74,10 @@ public class WaterMonster extends Monster {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM monsters where id=:id";
       WaterMonster monster = con.createQuery(sql)
-        .addParameter("id", id)
-        .throwOnMappingFailure(false)
-        .executeAndFetchFirst(WaterMonster.class);
-    return monster;
+      .addParameter("id", id)
+      .throwOnMappingFailure(false)
+      .executeAndFetchFirst(WaterMonster.class);
+      return monster;
     }
   }
 }
