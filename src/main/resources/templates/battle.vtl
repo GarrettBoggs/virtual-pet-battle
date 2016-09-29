@@ -1,12 +1,55 @@
 <h1>Battle!</h1>
 
 #if($game.stillPlaying)
+<div class="row">
+  <div class="col-sm-6">
+    <h2> $game.getPlayerOne().getName() </h2>
+    <h2> $game.getPlayerOne().getMonsters().get(0).getName() </h2>
+    <h2> $game.getPlayerOne().getMonsters().get(0).getCurrentHealth() / 100 </h2>
 
-<h2> $game.getAttacker().getCurrentHealth() / 100 </h2>
+    #if($game.getAttacker().equals($game.getPlayerOne()))
+    <form action="/battle-melee" method="post">
+      <button type="submit" class="btn btn-danger" name="button">melee</button>
+    </form>
 
-<h2> $game.getDefender().getCurrentHealth() / 100 </h2>
+    #if($game.getAttacker().getMonsters().get(0).getHealCount() > 0)
+    <form action="/battle-heal" method="post">
+      <button type="submit" class="btn btn-success" name="button">heal</button>
+    </form>
+    #else
+    <button type="submit" class="btn btn-default" name="button">No healz</button>
+    #end
 
-<a href = "/battle">
+    <form action="/battle-dot" method="post">
+      <button type="submit" class="btn btn-warning" name="button">bleed</button>
+    </form>
+    #end
+  </div>
+  <div class="col-sm-6">
+    <h2> $game.getPlayerTwo().getName() </h2>
+    <h2> $game.getPlayerTwo().getMonsters().get(0).getName() </h2>
+    <h2> $game.getPlayerTwo().getMonsters().get(0).getCurrentHealth() / 100 </h2>
+    #if($game.getAttacker().equals($game.getPlayerTwo()))
+    <form action="/battle-melee" method="post">
+      <button type="submit" class="btn btn-danger" name="button">melee</button>
+    </form>
+
+    #if($game.getAttacker().getMonsters().get(0).getHealCount() > 0)
+    <form action="/battle-heal" method="post">
+      <button type="submit" class="btn btn-success" name="button">heal</button>
+    </form>
+    #else
+    <button type="submit" class="btn btn-default" name="button">No healz</button>
+    #end
+
+    <form action="/battle-dot" method="post">
+      <button type="submit" class="btn btn-warning" name="button">bleed</button>
+    </form>
+    #end
+
+  </div>
+</div>
+
 #else
-<h2>$game.getAttacker().getName() has won the game!</h2>
+<h2>$game.getDefender().getName() and is monster $game.getDefender().getMonsters().get(0).getName() won the game!</h2>
 #end

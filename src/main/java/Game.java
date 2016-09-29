@@ -42,6 +42,7 @@ public class Game{
     }else{
       attacker = playerTwo;
       defender = playerOne;
+
     }
     return (attacker.getName() + " is attacking!");
   }
@@ -49,6 +50,7 @@ public class Game{
     if(attacker == playerOne){
       attacker = playerTwo;
       defender = playerOne;
+      System.out.println("cmove pone health: " + playerOne.getMonsters().get(0).getCurrentHealth());
     }else{
       attacker = playerOne;
       defender = playerTwo;
@@ -57,10 +59,11 @@ public class Game{
   }
 
   public boolean isDead(){
-    if(playerOne.getMonsters().get(0).getCurrentHealth() <= 0){
+    if(defender.getMonsters().get(0).getCurrentHealth() <= 0){
       stillPlaying = false;
       return true;
     }
     return false;
   }
+
 }

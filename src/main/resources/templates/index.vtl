@@ -1,7 +1,7 @@
 <h1> Battle! </h1>
 
 
-<h2>Player One</h2>
+<!-- <h2>Player One</h2>
 #foreach($currentMonster in $game.getPlayerOne().getMonsters())
   <h3>$currentMonster.getName()</h3>
   <h4>$currentMonster.getType()</h4>
@@ -13,4 +13,40 @@
   <h4>$currentMonster.getType()</h4>
 #end
 
-<a href="/battle">Fight!!</a>
+<a href="/battle">Fight!!</a> -->
+
+
+<form action="/pre-battle" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <label for="pOne-team-name">Player One Team Name: </label>
+            <input type="text" id="pOne-team-name" name="pOne-team-name">
+            <h4>Choose Your Monster!</h4>
+            <label for="pTwo_water">Water Monster: </label>
+            <input type="radio" name="pOne-type" value="water">
+            <label for="pTwo-fire">Fire Monster: </label>
+            
+            <input type="radio" name="pOne-type" value="fire">
+            <br>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="col-sm-6">
+              <label for="pTwo-team-name">Player Two Team Name: </label>
+              <input type="text" id="pTwo-team-name" name="pTwo-team-name">
+              <h4>Choose Your Monster!</h4>
+              <label for="pTwo_water">Water Monster: </label>
+              <input type="radio" name="pTwo-type" value="water">
+              <label for="pTwo-fire">Fire Monster: </label>
+              <input type="radio" name="pTwo-type" value="fire">
+              <br>
+          </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="center">
+        <button type="submit" class="btn btn-xl btn-danger">Fight!</button>
+    </div>
+</form>

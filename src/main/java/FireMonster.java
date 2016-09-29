@@ -20,8 +20,8 @@ public class FireMonster extends Monster implements DatabaseManagement{
     fireLevel = MAX_FIRE_LEVEL / 2;
     timer = new Timer();
     type = DATABASE_TYPE;
-    currentHealth = MAX_HEALTH;
-
+    current_health = MAX_HEALTH;
+    heal_counter = MAX_HEALS;
   }
   public int getFireLevel(){
     return fireLevel;

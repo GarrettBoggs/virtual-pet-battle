@@ -19,7 +19,8 @@ public class WaterMonster extends Monster implements DatabaseManagement{
     waterLevel = MAX_WATER_LEVEL / 2;
     timer = new Timer();
     type = DATABASE_TYPE;
-    currentHealth = MAX_HEALTH;
+    current_health = MAX_HEALTH;
+    heal_counter = MAX_HEALS;
   }
 
   public int getWaterLevel(){

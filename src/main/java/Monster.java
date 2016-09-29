@@ -16,19 +16,21 @@ public abstract class Monster {
   public int foodLevel;
   public int sleepLevel;
   public int playLevel;
-  public int currentHealth;
+  public int heal_counter;
   public Timestamp birthday;
   public Timestamp lastSlept;
   public Timestamp lastAte;
   public Timestamp lastPlayed;
   public Timer timer;
   public String type;
+  public int current_health;
 
   public static final int MAX_FOOD_LEVEL = 3;
   public static final int MAX_SLEEP_LEVEL = 8;
   public static final int MAX_PLAY_LEVEL = 12;
   public static final int MIN_ALL_LEVELS = 0;
   public static final int MAX_HEALTH = 100;
+  public static final int MAX_HEALS = 1;
 
   // Getters
   public int getId(){
@@ -62,10 +64,13 @@ public abstract class Monster {
     return lastPlayed;
   }
   public int getCurrentHealth(){
-    return currentHealth;
+    return current_health;
   }
   public String getType(){
     return type;
+  }
+  public int getHealCount(){
+    return heal_counter;
   }
 
   public int randomInt(int min, int max){
@@ -142,11 +147,13 @@ public abstract class Monster {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO monsters (name, personId, birthday, type) VALUES (:name, :personId, now(), :type)";
+      String sql = "INSERT INTO monsters (name, personId, birthday, type, current_health, heal_counter) VALUES (:name, :personId, now(), :type, :current_health, :heal_counter)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.name)
       .addParameter("personId", this.personId)
       .addParameter("type", this.type)
+      .addParameter("current_health", this.current_health)
+      .addParameter("heal_counter", this.heal_counter)
       .executeUpdate()
       .getKey();
     }
@@ -181,17 +188,47 @@ public abstract class Monster {
       String sql = "UPDATE monsters SET current_health = :current_health WHERE id = :id";
       con.createQuery(sql)
       .addParameter("id",id)
-      .addParameter("current_health",this.currentHealth)
+      .addParameter("current_health",this.current_health)
+      .executeUpdate();
+    }
+  }
+
+  public void setHealCounter(){
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE monsters SET heal_counter = :heal_counter WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("id",id)
+      .addParameter("heal_counter",this.heal_counter)
       .executeUpdate();
     }
   }
 
   public void takeDamage(int damage){
-    currentHealth -= damage;
+    current_health -= damage;
+    this.setHealth();
+  }
+
+  public void heal(){
+    // System.out.println("*** hc1: ***" + heal_counter);
+    current_health += 20;
+    if(current_health > MAX_HEALTH){
+      current_health = MAX_HEALTH;
+    }
+    this.setHealth();
+    heal_counter -= 1;
+    this.setHealCounter();
+      // System.out.println("*** hc2: ***" + heal_counter);
   }
 
   public int melee(){
-    return randomInt(8, 12);
+      int hit = randomInt(0, 10);
+      if (hit <= 2){
+          return 0;
+      }
+      else if (hit > 2 && hit <= 8){
+          return (randomInt(8, 12));
+      }
+      return (randomInt(15, 20));
   }
 
 }
