@@ -3,11 +3,13 @@ import org.sql2o.*;
 import java.util.List;
 import java.sql.Timestamp;
 
-public class WaterMonster extends Monster {
+public class WaterMonster extends Monster implements DatabaseManagement{
   private int waterLevel;
   public static final int MAX_WATER_LEVEL = 8;
   public static final String DATABASE_TYPE = "water";
   public Timestamp lastWater;
+
+
   public WaterMonster(String name, int personId) {
     this.name = name;
     this.personId = personId;
@@ -17,6 +19,7 @@ public class WaterMonster extends Monster {
     waterLevel = MAX_WATER_LEVEL / 2;
     timer = new Timer();
     type = DATABASE_TYPE;
+    currentHealth = MAX_HEALTH;
   }
 
   public int getWaterLevel(){

@@ -3,13 +3,14 @@ import org.sql2o.*;
 import java.util.List;
 import java.sql.Timestamp;
 
-public class FireMonster extends Monster {
+public class FireMonster extends Monster implements DatabaseManagement{
   private int fireLevel;
+
   public static final int MAX_FIRE_LEVEL = 10;
   public static final String DATABASE_TYPE = "fire";
   public Timestamp lastKindling;
 
-  
+
   public FireMonster(String name, int personId){
     this.name = name;
     this.personId = personId;
@@ -19,6 +20,7 @@ public class FireMonster extends Monster {
     fireLevel = MAX_FIRE_LEVEL / 2;
     timer = new Timer();
     type = DATABASE_TYPE;
+    currentHealth = MAX_HEALTH;
 
   }
   public int getFireLevel(){
@@ -40,9 +42,6 @@ public class FireMonster extends Monster {
     }
     fireLevel++;
   }
-
-
-
 
   public static List<FireMonster> all() {
     String sql = "SELECT * FROM monsters WHERE type='fire';";

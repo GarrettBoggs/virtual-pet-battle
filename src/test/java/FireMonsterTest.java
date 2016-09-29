@@ -9,7 +9,7 @@ public class FireMonsterTest {
 
   @Rule
   public DatabaseRule database = new DatabaseRule();
-  
+
   @Test
   public void fireMonster_instantiatesCorrectly_true() {
     FireMonster testFireMonster = new FireMonster("Bubbles", 1);
@@ -303,5 +303,11 @@ public class FireMonsterTest {
         Timestamp rightNow = new Timestamp(new Date().getTime());
         assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedFireMonsterLastKindling));
       }
-
+      @Test
+        public void delete_deletesFireMonster_true() {
+          FireMonster testFireMonster = new FireMonster("Bubbles", 1);
+          testFireMonster.save();
+          testFireMonster.delete();
+          assertEquals(null, FireMonster.find(testFireMonster.getId()));
+        }
     }

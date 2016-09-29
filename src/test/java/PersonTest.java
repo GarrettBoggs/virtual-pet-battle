@@ -9,7 +9,7 @@ public class PersonTest {
 
   @Rule
   public DatabaseRule database = new DatabaseRule();
-  
+
   @Test
   public void person_instantiatesCorrestly_true(){
     Person testPerson = new Person("Henry", "henry@henry.com");
@@ -73,5 +73,22 @@ public class PersonTest {
     assertEquals(0, savedCommunities.size());
   }
 
+  @Test
+  public void delete_deletesPerson_true() {
+    Person testPerson = new Person("Henry", "henry@henry.com");
+    testPerson.save();
+    testPerson.delete();
+    assertEquals(0, Person.all().size());
+  }
 
+  @Test
+  public void delete_deletesAllPersonsAndCommunitiesAssociations() {
+    Community testCommunity = new Community("Fire Enthusiasts", "Flame on!");
+    testCommunity.save();
+    Person testPerson = new Person("Henry", "henry@henry.com");
+    testPerson.save();
+    testCommunity.addPerson(testPerson);
+    testPerson.delete();
+    assertEquals(0, testCommunity.getPersons().size());
+  }
 }

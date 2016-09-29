@@ -1,0 +1,16 @@
+<h1> Battle! </h1>
+
+
+<h2>Player One</h2>
+#foreach($currentMonster in $game.getPlayerOne().getMonsters())
+  <h3>$currentMonster.getName()</h3>
+  <h4>$currentMonster.getType()</h4>
+#end
+
+<h2>Player Two</h2>
+#foreach($currentMonster in $game.getPlayerTwo().getMonsters())
+  <h3>$currentMonster.getName()</h3>
+  <h4>$currentMonster.getType()</h4>
+#end
+
+<a href="/battle">Fight!!</a>

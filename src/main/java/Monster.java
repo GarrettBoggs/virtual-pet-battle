@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.Random;
 
 
 public abstract class Monster {
@@ -16,6 +16,7 @@ public abstract class Monster {
   public int foodLevel;
   public int sleepLevel;
   public int playLevel;
+  public int currentHealth;
   public Timestamp birthday;
   public Timestamp lastSlept;
   public Timestamp lastAte;
@@ -27,17 +28,8 @@ public abstract class Monster {
   public static final int MAX_SLEEP_LEVEL = 8;
   public static final int MAX_PLAY_LEVEL = 12;
   public static final int MIN_ALL_LEVELS = 0;
+  public static final int MAX_HEALTH = 100;
 
-
-  // public Monster(String name, int personId){
-  //   this.name = name;
-  //   this.personId = personId;
-  //   playLevel = MAX_PLAY_LEVEL / 2;
-  //   sleepLevel = MAX_SLEEP_LEVEL / 2;
-  //   foodLevel = MAX_FOOD_LEVEL / 2;
-  //   timer = new Timer();
-  //
-  // }
   // Getters
   public int getId(){
     return id;
@@ -68,6 +60,17 @@ public abstract class Monster {
   }
   public Timestamp getLastPlayed(){
     return lastPlayed;
+  }
+  public int getCurrentHealth(){
+    return currentHealth;
+  }
+  public String getType(){
+    return type;
+  }
+
+  public int randomInt(int min, int max){
+    Random rand = new Random();
+    return rand.nextInt(max-min) + min;
   }
 
   @Override
@@ -163,4 +166,32 @@ public abstract class Monster {
     };
     this.timer.schedule(timerTask, 0, 600);
   }
+
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+    String sql = "DELETE FROM monsters WHERE id = :id;";
+    con.createQuery(sql)
+      .addParameter("id", this.id)
+      .executeUpdate();
+    }
+  }
+
+  public void setHealth(){
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE monsters SET current_health = :current_health WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("id",id)
+      .addParameter("current_health",this.currentHealth)
+      .executeUpdate();
+    }
+  }
+
+  public void takeDamage(int damage){
+    currentHealth -= damage;
+  }
+
+  public int melee(){
+    return randomInt(8, 12);
+  }
+
 }

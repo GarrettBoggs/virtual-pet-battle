@@ -1,0 +1,12 @@
+<h1>Battle!</h1>
+
+#if($game.stillPlaying)
+
+<h2> $game.getAttacker().getCurrentHealth() / 100 </h2>
+
+<h2> $game.getDefender().getCurrentHealth() / 100 </h2>
+
+<a href = "/battle">
+#else
+<h2>$game.getAttacker().getName() has won the game!</h2>
+#end

@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import org.sql2o.*;
 
-public class Person {
+public class Person implements DatabaseManagement{
   private int id;
   private String name;
   private String email;
@@ -12,7 +12,7 @@ public class Person {
     this.name = name;
     this.email = email;
   }
-  
+
   public int getId(){
     return id;
   }
@@ -34,6 +34,8 @@ public class Person {
       return this.getName().equals(newPerson.getName()) && this.getEmail().equals(newPerson.getEmail());
     }
   }
+
+  @Override
   public void save() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO persons (name, email) VALUES (:name, :email)";
@@ -44,12 +46,28 @@ public class Person {
       .getKey();
     }
   }
+
   public static List<Person> all(){
     String sql = "SELECT * FROM persons";
     try(Connection con = DB.sql2o.open()){
       return con.createQuery(sql).executeAndFetch(Person.class);
     }
   }
+
+  @Override
+ public void delete() {
+   try(Connection con = DB.sql2o.open()) {
+   String sql = "DELETE FROM persons WHERE id = :id;";
+   con.createQuery(sql)
+     .addParameter("id", this.id)
+     .executeUpdate();
+   String joinDeleteQuery = "DELETE FROM communities_persons WHERE person_id = :personId";
+   con.createQuery(joinDeleteQuery)
+     .addParameter("personId", this.getId())
+     .executeUpdate();
+   }
+ }
+
   public static Person find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM persons where id=:id";
@@ -59,8 +77,8 @@ public class Person {
       return person;
     }
   }
-  public List<Object> getMonsters() {
-    List<Object> allMonsters = new ArrayList<Object>();
+  public List<Monster> getMonsters() {
+    List<Monster> allMonsters = new ArrayList<Monster>();
 
     try(Connection con = DB.sql2o.open()) {
       String sqlFire = "SELECT * FROM monsters WHERE personId=:id AND type='fire';";
